@@ -1,59 +1,138 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+#API Laravel – CRUD de Usuários + Soft Delete + Permissões (Spatie)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este projeto implementa um sistema de gerenciamento de usuários com CRUD completo, validação robusta via FormRequest, Soft Deletes, arquitetura em camadas (Controller → Service → Repository → DTO), integração com Spatie Permissions, testes automatizados e execução via Docker.
 
-## About Laravel
+🚀 Como rodar o projeto
+🐳 Rodando com Docker (recomendado)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Crie o arquivo .env baseado no .env.example
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Altere o host do banco no .env:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+DB_HOST=db
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Suba os containers:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+docker-compose up -d
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Instale dependências dentro do container (se necessário):
 
-### Premium Partners
+docker exec -it app composer install
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
 
-## Contributing
+Execute as migrations:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+docker exec -it app php artisan migrate
 
-## Code of Conduct
+💻 Rodando localmente (sem Docker)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Instalar dependências:
 
-## Security Vulnerabilities
+composer install
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+Configurar .env
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Gerar key:
+
+php artisan key:generate
+
+
+Executar migrations:
+
+php artisan migrate
+
+
+Iniciar o servidor:
+
+php artisan serve
+
+🧩 Resumo da Arquitetura
+
+O projeto foi estruturado seguindo princípios de SOLID, separação de responsabilidades e organização em camadas:
+
+📁 Controllers
+
+Mantidos enxutos.
+
+Responsáveis apenas pelo fluxo HTTP.
+
+Chamam Services para lógica de negócio.
+
+⚙️ Services
+
+Contêm regras de negócio.
+
+Intermediários entre controllers e repositories.
+
+🗄️ Repositories
+
+Implementam acesso ao banco de dados.
+
+Ocultam detalhes do Eloquent.
+
+Seguem inversão de dependência via interfaces.
+
+📦 DTOs
+
+Utilizados para padronizar os dados recebidos.
+
+Ajudam na separação entre transporte e lógica interna.
+
+🛡️ Form Requests
+
+Validação centralizada.
+
+Retorno automático de erros 422.
+
+🧹 Soft Deletes
+
+Implementados com SoftDeletes.
+
+Usuários excluídos não aparecem em consultas comuns.
+
+🔐 Permissões e Roles (Spatie)
+
+Atribuição dinâmica de permissões e roles.
+
+Suporte a assignRole e givePermissionTo.
+
+Role padrão atribuída automaticamente (ex.: admin).
+
+🧪 Testes Automatizados
+
+Testes Feature implementados e passando:
+
+test_store_user_requires_fields
+
+test_store_user_success
+
+test_soft_delete_user
+
+Incluem validação, persistência e comportamento do soft delete.
+
+⚙️ Funcionalidades Principais
+✔️ Cadastro de usuário
+✔️ Listagem e consulta
+✔️ Atualização
+✔️ Exclusão com Soft Delete
+✔️ Atribuição de permissões e roles
+✔️ Validação completa
+✔️ Testes automatizados
+✔️ Arquitetura limpa
+📡 Endpoints (resumo básico)
+Método	Rota	Descrição
+POST	/api/users	Criar usuário
+GET	/api/users/{id}	Buscar usuário
+DELETE	/api/users/{id}	Soft delete
+POST	/api/users/{id}/permission	Atribuir role/permissão
+
+🧪 Rodando os Testes
+
+php artisan test --filter=UserCrudTest
+
+📄 Considerações Finais
+
+Mesmo com limitações de tempo, o projeto foi desenvolvido mantendo organização modular, responsabilidade única em cada camada e atenção às melhores práticas. A integração com Spatie, o controle de erros, e o fluxo de validação garantem uma API consistente e pronta para evolução.
