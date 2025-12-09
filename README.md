@@ -1,138 +1,154 @@
-#API Laravel – CRUD de Usuários + Soft Delete + Permissões (Spatie)
+# API Laravel – CRUD de Usuários + Soft Delete + Permissões (Spatie)
 
 Este projeto implementa um sistema de gerenciamento de usuários com CRUD completo, validação robusta via FormRequest, Soft Deletes, arquitetura em camadas (Controller → Service → Repository → DTO), integração com Spatie Permissions, testes automatizados e execução via Docker.
 
-🚀 Como rodar o projeto
-🐳 Rodando com Docker (recomendado)
+---
 
-Crie o arquivo .env baseado no .env.example
+## 🚀 Como rodar o projeto
 
-Altere o host do banco no .env:
+---
+
+## 🐳 Rodando com Docker (recomendado)
+
+**1. Crie o arquivo `.env` baseado no `.env.example`**
+
+**2. Altere o host do banco no `.env`:**
 
 DB_HOST=db
 
+lua
+Copiar código
 
-Suba os containers:
+**3. Suba os containers:**
 
 docker-compose up -d
 
+markdown
+Copiar código
 
-Instale dependências dentro do container (se necessário):
+**4. Instale dependências (se necessário):**
 
 docker exec -it app composer install
 
+pgsql
+Copiar código
 
-Execute as migrations:
+**5. Execute as migrations:**
 
 docker exec -it app php artisan migrate
 
-💻 Rodando localmente (sem Docker)
+yaml
+Copiar código
 
-Instalar dependências:
+---
+
+## 💻 Rodando localmente (sem Docker)
+
+**1. Instalar dependências:**
 
 composer install
 
+markdown
+Copiar código
 
-Configurar .env
+**2. Configurar arquivo `.env`**
 
-Gerar key:
+**3. Gerar chave da aplicação:**
 
 php artisan key:generate
 
+markdown
+Copiar código
 
-Executar migrations:
+**4. Executar migrations:**
 
 php artisan migrate
 
+markdown
+Copiar código
 
-Iniciar o servidor:
+**5. Iniciar o servidor:**
 
 php artisan serve
 
-🧩 Resumo da Arquitetura
+markdown
+Copiar código
 
-O projeto foi estruturado seguindo princípios de SOLID, separação de responsabilidades e organização em camadas:
+---
 
-📁 Controllers
+## 🧩 Resumo da Arquitetura
 
-Mantidos enxutos.
+O projeto foi estruturado seguindo princípios de **SOLID**, **separação de responsabilidades** e organização em módulos.
 
-Responsáveis apenas pelo fluxo HTTP.
+### 📁 **Controllers**
+- Mantidos enxutos.  
+- Responsáveis apenas pelo fluxo HTTP.  
+- Delegam regras de negócio aos Services.
 
-Chamam Services para lógica de negócio.
+### ⚙️ **Services**
+- Contêm a lógica de negócio.  
+- Fazem a ponte entre Controllers e Repositories.
 
-⚙️ Services
+### 🗄️ **Repositories**
+- Lidam diretamente com o banco (Eloquent).  
+- Encapsulam consultas e persistência.  
+- Utilizam **interfaces** para permitir inversão de dependência.
 
-Contêm regras de negócio.
+### 📦 **DTOs**
+- Padronizam dados trafegados entre camadas.  
+- Evitam acoplamento da request com as regras internas.
 
-Intermediários entre controllers e repositories.
+### 🛡️ **Form Requests**
+- Validação centralizada.  
+- Retorno automático de erros `422` em JSON.
 
-🗄️ Repositories
+### 🧹 **Soft Deletes**
+- Implementado com `SoftDeletes`.  
+- Usuários removidos não aparecem em listagens.
 
-Implementam acesso ao banco de dados.
+### 🔐 **Permissões e Roles (Spatie)**
+- Atribuição dinâmica de roles e permissões.  
+- Suporte a `assignRole()` e `givePermissionTo()`.  
+- Role padrão atribuída automaticamente (ex.: *admin*).
 
-Ocultam detalhes do Eloquent.
+### 🧪 **Testes Automatizados**
+Testes Feature cobrindo os principais fluxos:
+- `test_store_user_requires_fields`
+- `test_store_user_success`
+- `test_soft_delete_user`
 
-Seguem inversão de dependência via interfaces.
+Validam campos, persistência e funcionamento do soft delete.
 
-📦 DTOs
+---
 
-Utilizados para padronizar os dados recebidos.
+## 📡 Endpoints (resumo básico)
 
-Ajudam na separação entre transporte e lógica interna.
+| Método | Rota                          | Descrição                         |
+|--------|-------------------------------|-----------------------------------|
+| POST   | `/api/users`                  | Criar usuário                     |
+| GET    | `/api/users/{user}`             | Buscar usuário                    |
+| PUT    | `/api/users/{user}`             | Atualizar usuário                 |
+| DELETE | `/api/users/{user}`             | Soft delete                       |
+| POST   | `/api/users/{user}/permission`  | Atribuir role/permissão           |
 
-🛡️ Form Requests
+---
 
-Validação centralizada.
-
-Retorno automático de erros 422.
-
-🧹 Soft Deletes
-
-Implementados com SoftDeletes.
-
-Usuários excluídos não aparecem em consultas comuns.
-
-🔐 Permissões e Roles (Spatie)
-
-Atribuição dinâmica de permissões e roles.
-
-Suporte a assignRole e givePermissionTo.
-
-Role padrão atribuída automaticamente (ex.: admin).
-
-🧪 Testes Automatizados
-
-Testes Feature implementados e passando:
-
-test_store_user_requires_fields
-
-test_store_user_success
-
-test_soft_delete_user
-
-Incluem validação, persistência e comportamento do soft delete.
-
-⚙️ Funcionalidades Principais
-✔️ Cadastro de usuário
-✔️ Listagem e consulta
-✔️ Atualização
-✔️ Exclusão com Soft Delete
-✔️ Atribuição de permissões e roles
-✔️ Validação completa
-✔️ Testes automatizados
-✔️ Arquitetura limpa
-📡 Endpoints (resumo básico)
-Método	Rota	Descrição
-POST	/api/users	Criar usuário
-GET	/api/users/{id}	Buscar usuário
-DELETE	/api/users/{id}	Soft delete
-POST	/api/users/{id}/permission	Atribuir role/permissão
-
-🧪 Rodando os Testes
+## 🧪 Rodando os Testes
 
 php artisan test --filter=UserCrudTest
 
-📄 Considerações Finais
+---
 
-Mesmo com limitações de tempo, o projeto foi desenvolvido mantendo organização modular, responsabilidade única em cada camada e atenção às melhores práticas. A integração com Spatie, o controle de erros, e o fluxo de validação garantem uma API consistente e pronta para evolução.
+## 📄 Considerações Finais
+
+Mesmo com o tempo reduzido, o projeto foi desenvolvido mantendo:
+
+- Arquitetura limpa e modular  
+- Princípios SOLID  
+- Separação clara entre camadas  
+- Padrões consistentes de DTOs  
+- Controle de erros centralizado via Exceptions no bootstrap  
+- Integração com Spatie para controle de permissões  
+- Testes garantindo funcionamento do CRUD
+
+A API está pronta para evoluir, escalável e fácil de manter.
