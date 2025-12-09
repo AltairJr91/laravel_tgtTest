@@ -16,29 +16,21 @@ Este projeto implementa um sistema de gerenciamento de usuários com CRUD comple
 
 DB_HOST=db
 
-lua
-Copiar código
 
 **3. Suba os containers:**
 
 docker-compose up -d
 
-markdown
-Copiar código
 
 **4. Instale dependências (se necessário):**
 
 docker exec -it app composer install
 
-pgsql
-Copiar código
 
 **5. Execute as migrations:**
 
 docker exec -it app php artisan migrate
 
-yaml
-Copiar código
 
 ---
 
@@ -48,8 +40,6 @@ Copiar código
 
 composer install
 
-markdown
-Copiar código
 
 **2. Configurar arquivo `.env`**
 
@@ -57,22 +47,16 @@ Copiar código
 
 php artisan key:generate
 
-markdown
-Copiar código
 
 **4. Executar migrations:**
 
 php artisan migrate
 
-markdown
-Copiar código
 
 **5. Iniciar o servidor:**
 
 php artisan serve
 
-markdown
-Copiar código
 
 ---
 
